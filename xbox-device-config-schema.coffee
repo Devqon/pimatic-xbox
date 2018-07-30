@@ -3,14 +3,12 @@
 module.exports = {
   title: "Xbox config options"
   type: "object"
-  properties:
-    liveId:
-      description: "The xbox Live Id",
-      type: "string",
-      default: ""
-    type:
-      description: "The type of xbox"
-      type: "string"
-      enum: ["xbox-one"]
-      default: "xbox-one"
+  XboxPowerSwitch:
+    title: "Xbox power switch"
+    type: "object"
+    properties:
+      option1:
+        description: "Just click save"
+        type: "string"
+        default: ""
 }
