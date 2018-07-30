@@ -1,0 +1,31 @@
+{
+  "name": "pimatic-xbox",
+  "description": "A Pimatic plugin for controlling an xbox",
+  "author": "Sander Geerts",
+  "main": "xbox",
+  "files": [
+    "xbox.coffee",
+    "README.md",
+    "xbox-device-config-schema.coffee",
+    "xbox-config-schema.coffee"
+  ],
+  "version": "0.8.0",
+  "homepage": "http://github.com/Devqon/pimatic-xbox",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Devqon/pimatic-xbox"
+  },
+  "configSchema": "xbox-config-schema.coffee",
+  "dependencies": {
+    "xbox-on": "0.0.10"
+  },
+  "peerDependencies": {
+    "pimatic": "0.8.*",
+    "request-promise": "^2.0.1"
+  },
+  "engines": {
+    "node": ">0.8.x",
+    "npm": ">1.1.x"
+  }
+}
