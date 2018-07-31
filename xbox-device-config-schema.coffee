@@ -7,8 +7,8 @@ module.exports = {
     title: "Xbox power switch"
     type: "object"
     properties:
-      ip:
-        description: "IP address of the xbox"
+      host:
+        description: "The host or IP address of the xbox"
         type: "string"
         default: ""
       liveId:

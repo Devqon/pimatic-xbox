@@ -19,7 +19,7 @@
   "configSchema": "xbox-config-schema.coffee",
   "dependencies": {
     "pimatic-plugin-commons": "^0.9.8",
-    "xbox-on": "0.0.10"
+    "xbox-on": "^0.0.10"
   },
   "peerDependencies": {
     "pimatic": "0.8.*",

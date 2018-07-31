@@ -2,7 +2,7 @@ module.exports = (env) ->
 
   Promise = env.require 'bluebird'
   commons = require('pimatic-plugin-commons')(env)
-  xbox = require 'xbox-on'
+  xboxOneApi = require('./xbox-one-api')(env)
 
   class XboxPlugin extends env.plugins.Plugin
 
@@ -25,10 +25,10 @@ module.exports = (env) ->
       @name = @config.name
       @id = @config.id
       if @config.type is "xbox-one"
-        @_base.debug "Initializing xbox with ip #{@config.ip} and live id #{@config.liveId}"
-        @xbox = new xbox(@config.ip, @config.liveId)
+        @_base.debug "Initializing xbox with host #{@config.host} and live id #{@config.liveId}"
+        @api = new xboxOneApi(@config)
       else
-        @xbox = null
+        @api = null
         @_base.error "Only xbox-one is supported for now"
       @_state = false
       super()
@@ -37,31 +37,22 @@ module.exports = (env) ->
       return new Promise (resolve, reject) => 
         if state
           @_base.debug "Trying to power the xbox #{@xbox.id} #{@xbox.ip}"
-          options = {
-            tries: 5,
-            delay: 1000,
-            waitForCallback: true
-          }
-          @xbox.sendOn((err) =>
-            if err
-              @_base.rejectWithErrorString reject, if err instanceof Error then err else "Could not turn on xbox"
-            else
-              @_base.info "Xbox powered on"
-              # set state false anyway, because there is no implementation for the off switch
-              @_setState(false)
-              resolve()
-          )
+          @api.powerOn().then =>
+            @_setState(true)
+            resolve()
+          .catch =>
+            reject()
         else
-          @_setState(state)
-          @_base.info "Turning off not implemented"
-          resolve()
+          @api.powerOff().then =>
+            _setState(false)
+            resolve()
 
     getState: () ->
       return Promise.resolve @_state
 
     destroy: () ->
       @_base.cancelUpdate()
-      @xbox.disconnect()
+      @api.destroy()
       super()
 
   # ###Finally
