@@ -7,8 +7,17 @@ module.exports = {
     title: "Xbox power switch"
     type: "object"
     properties:
-      option1:
-        description: "Just click save"
+      ip:
+        description: "IP address of the xbox"
         type: "string"
         default: ""
+      liveId:
+        description: "Xbox live Id"
+        type: "string",
+        default: ""
+      type:
+        description: "The type of xbox"
+        type: "string"
+        enum: ["xbox-one"]
+        default: "xbox-one"
 }

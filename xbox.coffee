@@ -9,20 +9,24 @@ module.exports = (env) ->
     init: (app, @framework, @config) =>
       deviceConfigDef = require("./xbox-device-config-schema")
 
+      xboxPowerSwitchConfig = deviceConfigDef.XboxPowerSwitch
+      xboxPowerSwitchConfig.properties.ip.default = @config.ip
+      xboxPowerSwitchConfig.properties.liveId.default = @config.liveId
+      xboxPowerSwitchConfig.properties.type.default = @config.type
+
       @framework.deviceManager.registerDeviceClass("XboxPowerSwitch", {
-        configDef: deviceConfigDef.XboxPowerSwitch,
-        createCallback: (config) => new XboxPowerSwitch(config, @config)
+        configDef: xboxPowerSwitchConfig,
+        createCallback: (config) => new XboxPowerSwitch(config)
       })
 
-
   class XboxPowerSwitch extends env.devices.PowerSwitch
-    constructor: (@config, @pluginConfig) ->
+    constructor: (@config) ->
       @_base = commons.base @, @config.class
       @name = @config.name
       @id = @config.id
-      if @pluginConfig.type is "xbox-one"
-        @_base.debug "Initializing xbox with ip #{@pluginConfig.ip} and live id #{@pluginConfig.liveId}"
-        @xbox = new xbox(@pluginConfig.ip, @pluginConfig.liveId)
+      if @config.type is "xbox-one"
+        @_base.debug "Initializing xbox with ip #{@config.ip} and live id #{@config.liveId}"
+        @xbox = new xbox(@config.ip, @config.liveId)
       else
         @xbox = null
         @_base.error "Only xbox-one is supported for now"
@@ -32,19 +36,19 @@ module.exports = (env) ->
     changeStateTo: (state) ->
       return new Promise (resolve, reject) => 
         if state
-          @_base.info "Trying to power the xbox #{@xbox.id} #{@xbox.ip}"
+          @_base.debug "Trying to power the xbox #{@xbox.id} #{@xbox.ip}"
           options = {
             tries: 5,
             delay: 1000,
             waitForCallback: true
           }
           @xbox.sendOn((err) =>
-            @_base.info "callback from xbox #{err || 'err'}"
             if err
               @_base.rejectWithErrorString reject, if err instanceof Error then err else "Could not turn on xbox"
             else
               @_base.info "Xbox powered on"
-              @_setState(state)
+              # set state false anyway, because there is no implementation for the off switch
+              @_setState(false)
               resolve()
           )
         else
@@ -57,6 +61,7 @@ module.exports = (env) ->
 
     destroy: () ->
       @_base.cancelUpdate()
+      @xbox.disconnect()
       super()
 
   # ###Finally
