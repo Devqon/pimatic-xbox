@@ -30,8 +30,8 @@ module.exports = (env) ->
       @_ensureXbox()
       return new Promise (resolve, reject) =>
         options = {
-          tries: 5,
-          delay: 1000,
+          tries: @config.tries,
+          delay: @config.delay,
           waitForCallback: false
         }
         @xbox.powerOn(options, (err) =>

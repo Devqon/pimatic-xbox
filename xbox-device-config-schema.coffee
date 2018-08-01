@@ -15,6 +15,14 @@ module.exports = {
         description: "Xbox live Id"
         type: "string",
         default: ""
+      tries:
+        description: "Number of tries to send power packets"
+        type: "number"
+        default: 5
+      delay:
+        description: "Delay between power packets"
+        type: "number"
+        default: 1000
       type:
         description: "The type of xbox"
         type: "string"
