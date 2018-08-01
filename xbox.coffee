@@ -10,7 +10,7 @@ module.exports = (env) ->
       deviceConfigDef = require("./xbox-device-config-schema")
 
       xboxPowerSwitchConfig = deviceConfigDef.XboxPowerSwitch
-      xboxPowerSwitchConfig.properties.ip.default = @config.ip
+      xboxPowerSwitchConfig.properties.host.default = @config.host
       xboxPowerSwitchConfig.properties.liveId.default = @config.liveId
       xboxPowerSwitchConfig.properties.type.default = @config.type
 
@@ -24,19 +24,22 @@ module.exports = (env) ->
       @_base = commons.base @, @config.class
       @name = @config.name
       @id = @config.id
+
       if @config.type is "xbox-one"
         @_base.debug "Initializing xbox with host #{@config.host} and live id #{@config.liveId}"
         @api = new xboxOneApi(@config)
       else
         @api = null
-        @_base.error "Only xbox-one is supported for now"
+        @_base.error "Xbox type #{@config.type} is not supported"
+      
       @_state = false
-      super()
+
+      super(@config)
 
     changeStateTo: (state) ->
       return new Promise (resolve, reject) => 
         if state
-          @_base.debug "Trying to power the xbox #{@xbox.id} #{@xbox.ip}"
+          @_base.debug "Trying to power the xbox #{@config.host} #{@config.ip}"
           @api.powerOn().then =>
             @_setState(true)
             resolve()
@@ -44,7 +47,7 @@ module.exports = (env) ->
             reject()
         else
           @api.powerOff().then =>
-            _setState(false)
+            @_setState(false)
             resolve()
 
     getState: () ->
@@ -55,8 +58,6 @@ module.exports = (env) ->
       @api.destroy()
       super()
 
-  # ###Finally
-  # Create a instance of my plugin
   xboxPlugin = new XboxPlugin
-  # and return it to the framework.
+
   return xboxPlugin

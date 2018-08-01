@@ -5,14 +5,14 @@ module.exports = (env) ->
   xbox = require 'xbox-on'
 
   class XboxOneApi
-    constructor: (@config) =>
+    constructor: (@config) ->
       @_base = commons.base @, "XboxOneApi"
       @liveId = @config.liveId
       @host = @config.host
       @xbox = null
 
     powerOn: () =>
-      return _turnOn()
+      return @_turnOn()
 
     powerOff: () =>
       return new Promise (resolve, reject) =>
