@@ -7,9 +7,14 @@
     "xbox.coffee",
     "README.md",
     "xbox-device-config-schema.coffee",
-    "xbox-config-schema.coffee"
+    "xbox-config-schema.coffee",
+    "LICENSE",
+    "xbox-one-api"
   ],
-  "version": "0.1.0",
+  "keywords": [
+    "pimatic", "xbox", "xbox-one"
+  ],
+  "version": "0.1.1",
   "homepage": "http://github.com/Devqon/pimatic-xbox",
   "private": false,
   "repository": {
@@ -22,7 +27,7 @@
     "xbox-on": "^0.0.10"
   },
   "peerDependencies": {
-    "pimatic": "0.8.*",
+    "pimatic": ">=0.8.0 <1.0.0",
     "request-promise": "^2.0.1"
   },
   "engines": {
